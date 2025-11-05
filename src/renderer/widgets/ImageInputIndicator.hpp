@@ -33,12 +33,13 @@ class CImageInputIndicator : public IWidget {
     void         reset();
 
     void         renderUpdate();
-    void         selectImage();
     void         onTimerUpdate();
     void         plantTimer();
 
   private:
-    AWP<CImageInputIndicator>                     m_self;
+    void                            selectImage();
+
+    AWP<CImageInputIndicator>       m_self;
 
     CFramebuffer                    imageFB;
 
