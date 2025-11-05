@@ -52,19 +52,12 @@ void CImageInputIndicator::selectImage() {
         return;
     }
 
-    Debug::log(INFO, "Selected new image: {}", new_image_path);
     image_path = new_image_path;
 
     m_pendingResource = true;
 
-    if (resourceID == 0) {
-        resourceID = g_asyncResourceManager->requestImage(image_path, m_imageRevision, nullptr);
-        Debug::log(INFO, "New resourceID: {}", resourceID);
-    } else {
-        return;
-        AWP<IWidget> widget(m_self);
-        g_asyncResourceManager->requestImage(image_path, m_imageRevision, widget);
-    }
+    AWP<IWidget> widget(m_self);
+    g_asyncResourceManager->requestImage(image_path, m_imageRevision, widget);
 }
 
 void CImageInputIndicator::onTimerUpdate() {
