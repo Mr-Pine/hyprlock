@@ -7,6 +7,8 @@
 #include "../../helpers/Log.hpp"
 #include "../../helpers/MiscFunctions.hpp"
 #include "../../config/ConfigDataValues.hpp"
+#include "src/auth/Auth.hpp"
+
 #include <cmath>
 #include <hyprlang.hpp>
 #include <hyprutils/math/Vector2D.hpp>
@@ -31,29 +33,35 @@ void CImageInputIndicator::selectImage() {
         Debug::log(WARN, "Trying to select image, but a resource is still pending! Skipping update.");
         return;
     }
-    Debug::log(INFO, "Selecting image...");
 
-    image_path.clear();
-    image_path.append(path);
-    image_path.append("/");
+    std::string new_image_path;
+    new_image_path.append(path);
+    new_image_path.append("/");
     if (checkWaiting) {
-        image_path.append("unlocked");
+        new_image_path.append("unlocked");
     } else if (displayFail) {
-        image_path.append("wrong");
+        new_image_path.append("wrong");
     } else {
         size_t image_number = passwordLength % num_images;
-        image_path.append(std::format("{:02d}", image_number));
+        new_image_path.append(std::format("{:02d}", image_number));
     }
 
-    image_path.append(".png");
+    new_image_path.append(".png");
 
-    Debug::log(INFO, "Selected image: {}", image_path);
+    if (new_image_path == image_path) {
+        return;
+    }
+
+    Debug::log(INFO, "Selected new image: {}", new_image_path);
+    image_path = new_image_path;
 
     m_pendingResource = true;
 
     if (resourceID == 0) {
         resourceID = g_asyncResourceManager->requestImage(image_path, m_imageRevision, nullptr);
+        Debug::log(INFO, "New resourceID: {}", resourceID);
     } else {
+        return;
         AWP<IWidget> widget(m_self);
         g_asyncResourceManager->requestImage(image_path, m_imageRevision, widget);
     }
@@ -168,6 +176,11 @@ void CImageInputIndicator::reset() {
 }
 
 bool CImageInputIndicator::draw(const SRenderData& data) {
+    passwordLength = g_pHyprlock->getPasswordBufferDisplayLen();
+    checkWaiting   = g_pAuth->checkWaiting();
+    displayFail    = g_pAuth->m_bDisplayFailText;
+
+    selectImage();
 
     if (resourceID == 0)
         return false;
