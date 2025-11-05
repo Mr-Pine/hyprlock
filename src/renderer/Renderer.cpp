@@ -16,6 +16,7 @@
 #include "widgets/Background.hpp"
 #include "widgets/Label.hpp"
 #include "widgets/Image.hpp"
+#include "widgets/ImageInputIndicator.hpp"
 #include "widgets/Shape.hpp"
 
 inline const float fullVerts[] = {
@@ -412,6 +413,8 @@ std::vector<ASP<IWidget>>& CRenderer::getOrCreateWidgetsFor(const CSessionLockSu
                 createWidget<CShape>(widgets[surf.m_outputID]);
             } else if (c.type == "image") {
                 createWidget<CImage>(widgets[surf.m_outputID]);
+            } else if (c.type == "image-input-indicator") {
+                createWidget<CImageInputIndicator>(widgets[surf.m_outputID]);
             } else {
                 Debug::log(ERR, "Unknown widget type: {}", c.type);
                 continue;

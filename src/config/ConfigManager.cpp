@@ -278,6 +278,24 @@ void CConfigManager::init() {
     SHADOWABLE("image");
     CLICKABLE("image");
 
+    m_config.addSpecialCategory("image-input-indicator", Hyprlang::SSpecialCategoryOptions{.key = nullptr, .anonymousKeyBased = true});
+    m_config.addSpecialConfigValue("image-input-indicator", "monitor", Hyprlang::STRING{""});
+    m_config.addSpecialConfigValue("image-input-indicator", "path", Hyprlang::STRING{""});
+    m_config.addSpecialConfigValue("image-input-indicator", "num_images", Hyprlang::INT{10});
+    m_config.addSpecialConfigValue("image-input-indicator", "size", Hyprlang::INT{150});
+    m_config.addSpecialConfigValue("image-input-indicator", "rounding", Hyprlang::INT{-1});
+    m_config.addSpecialConfigValue("image-input-indicator", "border_size", Hyprlang::INT{4});
+    m_config.addSpecialConfigValue("image-input-indicator", "border_color", GRADIENTCONFIG("0xFFDDDDDD"));
+    m_config.addSpecialConfigValue("image-input-indicator", "position", LAYOUTCONFIG("0,0"));
+    m_config.addSpecialConfigValue("image-input-indicator", "halign", Hyprlang::STRING{"center"});
+    m_config.addSpecialConfigValue("image-input-indicator", "valign", Hyprlang::STRING{"center"});
+    m_config.addSpecialConfigValue("image-input-indicator", "rotate", Hyprlang::FLOAT{0});
+    m_config.addSpecialConfigValue("image-input-indicator", "reload_time", Hyprlang::INT{-1});
+    m_config.addSpecialConfigValue("image-input-indicator", "reload_cmd", Hyprlang::STRING{""});
+    m_config.addSpecialConfigValue("image-input-indicator", "zindex", Hyprlang::INT{0});
+    SHADOWABLE("image-input-indicator");
+    CLICKABLE("image-input-indicator");
+
     m_config.addSpecialCategory("input-field", Hyprlang::SSpecialCategoryOptions{.key = nullptr, .anonymousKeyBased = true});
     m_config.addSpecialConfigValue("input-field", "monitor", Hyprlang::STRING{""});
     m_config.addSpecialConfigValue("input-field", "size", LAYOUTCONFIG("400,90"));
@@ -450,6 +468,34 @@ std::vector<CConfigManager::SWidgetConfig> CConfigManager::getWidgetConfigs() {
                 {"zindex", m_config.getSpecialConfigValue("image", "zindex", k.c_str())},
                 SHADOWABLE("image"),
                 CLICKABLE("image"),
+            }
+        });
+        // clang-format on
+    }
+
+    //
+    keys = m_config.listKeysForSpecialCategory("image-input-indicator");
+    for (auto& k : keys) {
+        // clang-format off
+        result.push_back(CConfigManager::SWidgetConfig{
+            .type = "image-input-indicator",
+            .monitor = std::any_cast<Hyprlang::STRING>(m_config.getSpecialConfigValue("image-input-indicator", "monitor", k.c_str())),
+            .values = {
+                {"path", m_config.getSpecialConfigValue("image-input-indicator", "path", k.c_str())},
+                {"num_images", m_config.getSpecialConfigValue("image-input-indicator", "num_images", k.c_str())},
+                {"size", m_config.getSpecialConfigValue("image-input-indicator", "size", k.c_str())},
+                {"rounding", m_config.getSpecialConfigValue("image-input-indicator", "rounding", k.c_str())},
+                {"border_size", m_config.getSpecialConfigValue("image-input-indicator", "border_size", k.c_str())},
+                {"border_color", m_config.getSpecialConfigValue("image-input-indicator", "border_color", k.c_str())},
+                {"position", m_config.getSpecialConfigValue("image-input-indicator", "position", k.c_str())},
+                {"halign", m_config.getSpecialConfigValue("image-input-indicator", "halign", k.c_str())},
+                {"valign", m_config.getSpecialConfigValue("image-input-indicator", "valign", k.c_str())},
+                {"rotate", m_config.getSpecialConfigValue("image-input-indicator", "rotate", k.c_str())},
+                {"reload_time", m_config.getSpecialConfigValue("image-input-indicator", "reload_time", k.c_str())},
+                {"reload_cmd", m_config.getSpecialConfigValue("image-input-indicator", "reload_cmd", k.c_str())},
+                {"zindex", m_config.getSpecialConfigValue("image-input-indicator", "zindex", k.c_str())},
+                SHADOWABLE("image-input-indicator"),
+                CLICKABLE("image-input-indicator"),
             }
         });
         // clang-format on
