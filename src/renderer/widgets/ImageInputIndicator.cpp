@@ -30,7 +30,7 @@ static void onTimer(AWP<CImageInputIndicator> ref) {
 
 void CImageInputIndicator::selectImage() {
     if (m_pendingResource) {
-        Debug::log(WARN, "Trying to select image, but a resource is still pending! Skipping update.");
+        Log::logger->log(Log::WARN, "Trying to select image, but a resource is still pending! Skipping update.");
         return;
     }
 
@@ -62,7 +62,7 @@ void CImageInputIndicator::selectImage() {
 
 void CImageInputIndicator::onTimerUpdate() {
     if (m_pendingResource) {
-        Debug::log(WARN, "Trying to update image, but a resource is still pending! Skipping update.");
+        Log::logger->log(Log::WARN, "Trying to update image, but a resource is still pending! Skipping update.");
         return;
     }
 
@@ -93,7 +93,7 @@ void CImageInputIndicator::onTimerUpdate() {
             m_imageRevision = 0;
     } catch (std::exception& e) {
         path = OLDPATH;
-        Debug::log(ERR, "{}", e.what());
+        Log::logger->log(Log::ERR, "{}", e.what());
         return;
     }
 
@@ -138,12 +138,12 @@ void CImageInputIndicator::configure(const std::unordered_map<std::string, std::
     }
 
     selectImage();
-    angle      = angle * M_PI / 180.0;
+    angle = angle * M_PI / 180.0;
 
     if (reloadTime > -1) {
         try {
             modificationTime = std::filesystem::last_write_time(absolutePath(path, ""));
-        } catch (std::exception& e) { Debug::log(ERR, "{}", e.what()); }
+        } catch (std::exception& e) { Log::logger->log(Log::ERR, "{}", e.what()); }
 
         plantTimer();
     }
@@ -252,10 +252,10 @@ void CImageInputIndicator::onAssetUpdate(ResourceID id, ASP<CTexture> newAsset) 
     m_pendingResource = false;
 
     if (!newAsset)
-        Debug::log(ERR, "asset update failed, resourceID: {} not available on update!", id);
+        Log::logger->log(Log::ERR, "asset update failed, resourceID: {} not available on update!", id);
     else if (newAsset->m_iType == TEXTURE_INVALID) {
         g_asyncResourceManager->unload(newAsset);
-        Debug::log(ERR, "New image asset has an invalid texture!");
+        Log::logger->log(Log::ERR, "New image asset has an invalid texture!");
     } else {
         g_asyncResourceManager->unload(asset);
         imageFB.destroyBuffer();
